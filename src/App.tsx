@@ -3,6 +3,7 @@ import { TonConnectButton } from "@tonconnect/ui-react";
 import { useMainContract } from "./hooks/useMainContract";
 import { useTonConnect } from "./hooks/useTonConnect";
 import { fromNano } from "@ton/core";
+import WebApp from '@twa-dev/sdk';
 
 function App() {
   const {
@@ -15,6 +16,9 @@ function App() {
   } = useMainContract();
 
   const { connected } = useTonConnect();
+  const showAlert = () => {
+    WebApp.showAlert("Hey there!");
+  };
 
   return (
     <div>
@@ -23,27 +27,41 @@ function App() {
       </div>
       <div>
         <div className='Card'>
+          <b>{WebApp.platform}</b>
           <b>Our contract Address</b>
           <div className='Hint'>{contract_address?.slice(0, 30) + "..."}</div>
           <b>Our contract Balance</b>
-          {contract_balance && <div className='Hint'>{fromNano(contract_balance)}</div>}
+          {contract_balance && (
+            <div className='Hint'>{fromNano(contract_balance)}</div>
+          )}
         </div>
 
         <div className='Card'>
           <b>Counter Value</b>
           <div>{counter_value ?? "Loading..."}</div>
         </div>
+
+        <a
+          onClick={() => {
+            showAlert();
+          }}
+        >
+          Show Alert
+        </a>
+
+        <br />
+
         {connected && (
           <a
             onClick={() => {
               sendIncrement();
             }}
           >
-            Increment by 1
+            Increment by 5
           </a>
         )}
 
-        <br/>
+        <br />
 
         {connected && (
           <a
@@ -51,11 +69,11 @@ function App() {
               sendDeposit();
             }}
           >
-            Request deposit of 1 ton
+            Request deposit of 1 TON
           </a>
         )}
 
-        <br/>
+        <br />
 
         {connected && (
           <a
@@ -66,7 +84,6 @@ function App() {
             Request 0.7 TON withdrawal
           </a>
         )}
-
       </div>
     </div>
   );
